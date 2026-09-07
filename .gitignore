@@ -1,0 +1,13 @@
+Library/
+Temp/
+Obj/
+Logs/
+UserSettings/
+Builds/
+build/
+.utmp/
+*.csproj
+*.sln
+*.log
+Packages/*.tgz
+Assets/Resources/MapCredentials.json*

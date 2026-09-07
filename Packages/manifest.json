@@ -1,0 +1,16 @@
+{
+  "scopedRegistries": [{"name":"Cesium", "url":"https://unity.pkg.cesium.com", "scopes":["com.cesium.unity"]}],
+  "dependencies": {
+    "com.cesium.unity":"file:com.cesium.unity-1.25.1.tgz",
+    "com.unity.xr.management":"4.6.1",
+    "com.unity.xr.openxr":"1.16.1",
+    "com.unity.ugui":"2.0.0",
+    "com.unity.modules.androidjni":"1.0.0",
+    "com.unity.modules.physics":"1.0.0",
+    "com.unity.modules.xr":"1.0.0",
+    "com.unity.modules.ui":"1.0.0",
+    "com.unity.modules.unitywebrequest":"1.0.0",
+    "com.unity.modules.unitywebrequesttexture":"1.0.0",
+    "com.unity.modules.imageconversion":"1.0.0"
+  }
+}

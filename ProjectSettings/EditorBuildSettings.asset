@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Flight.unity
+    guid: 7faf88231c6bb504a95833744ff243e3
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1d0999a06bc5d47428ed2cd41d7e1bfd, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 5ff58fccd7b5e3544a56821755d1e036, type: 2}
