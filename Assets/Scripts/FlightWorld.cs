@@ -112,23 +112,11 @@ namespace EarthWings
         }
         static Transform Hand(Transform parent, string name, Color color)
         {
-            var root = new GameObject(name + " tracked glove"); root.transform.SetParent(parent, false);
-            Color dark = new Color(.035f,.045f,.06f);
-            Color light = Color.Lerp(color, Color.white, .25f);
-            GlovePart(root.transform, PrimitiveType.Cube, new Vector3(0,0,.035f), new Vector3(.13f,.07f,.17f), dark);
-            GlovePart(root.transform, PrimitiveType.Cylinder, new Vector3(0,-.07f,-.035f), new Vector3(.075f,.045f,.075f), light);
-            for (int i = -1; i <= 2; i++)
-                GlovePart(root.transform, PrimitiveType.Capsule, new Vector3(i*.027f-.012f,.01f,.135f), new Vector3(.022f,.065f,.022f), dark);
-            var thumb = GlovePart(root.transform, PrimitiveType.Capsule, new Vector3(-.078f,-.005f,.045f), new Vector3(.023f,.06f,.023f), dark);
-            thumb.localRotation = Quaternion.Euler(0,0,55);
-            return root.transform;
-        }
-        static Transform GlovePart(Transform parent, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
-        {
-            var part = GameObject.CreatePrimitive(primitive); part.transform.SetParent(parent, false);
-            part.transform.localPosition = position; part.transform.localScale = scale;
-            Destroy(part.GetComponent<Collider>()); part.GetComponent<Renderer>().material.color = color;
-            return part.transform;
+            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = name;
+            go.transform.SetParent(parent, false); go.transform.localScale = Vector3.one * .09f;
+            Destroy(go.GetComponent<Collider>());
+            go.GetComponent<Renderer>().material.color = color;
+            return go.transform;
         }
         static void TrainingGround()
         {

@@ -66,6 +66,8 @@ namespace EarthWings
             r.TryGetFeatureValue(CommonUsages.trigger, out float rt);
             l.TryGetFeatureValue(CommonUsages.grip, out float leftGrip);
             r.TryGetFeatureValue(CommonUsages.grip, out float rightGrip);
+            l.TryGetFeatureValue(CommonUsages.gripButton, out bool leftGripButton);
+            r.TryGetFeatureValue(CommonUsages.gripButton, out bool rightGripButton);
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
             l.TryGetFeatureValue(CommonUsages.primaryButton, out bool boost);
@@ -128,7 +130,8 @@ namespace EarthWings
                     if (freeFlight)
                     {
                         // The side grips are the throttle: right accelerates, left brakes.
-                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + (rightGrip - leftGrip) * 95f * dt, 10, 180);
+                        float throttle = (rightGripButton || rightGrip > .15f ? 1f : 0f) - (leftGripButton || leftGrip > .15f ? 1f : 0f);
+                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + throttle * 95f * dt, 10, 180);
                         transform.Rotate(0, rightStick.x * 58f * dt, 0, Space.Self);
                         Vector3 direction = transform.InverseTransformDirection(head.forward);
                         direction.y += rt * 1.25f - lt * 1.25f;
