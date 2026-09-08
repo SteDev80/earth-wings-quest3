@@ -39,20 +39,54 @@ namespace EarthWings
         {
             var canvasObject = new GameObject("Label", typeof(Canvas));
             canvasObject.transform.SetParent(transform, false);
-            canvasObject.transform.localScale = Vector3.one * .06f;
+            canvasObject.transform.localScale = Vector3.one * .10f;
             visual = canvasObject.transform;
             var canvas = canvasObject.GetComponent<Canvas>(); canvas.renderMode = RenderMode.WorldSpace; canvas.worldCamera = cameraToFace;
-            canvasObject.GetComponent<RectTransform>().sizeDelta = new Vector2(700,100);
+            canvasObject.GetComponent<RectTransform>().sizeDelta = new Vector2(900,130);
             var textObject = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(Shadow));
             textObject.transform.SetParent(canvasObject.transform, false);
-            textObject.GetComponent<RectTransform>().sizeDelta = new Vector2(700,100);
+            textObject.GetComponent<RectTransform>().sizeDelta = new Vector2(900,130);
             var text = textObject.GetComponent<Text>(); text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.text = label; text.fontSize = 40; text.fontStyle = FontStyle.Bold; text.alignment = TextAnchor.MiddleCenter;
+            text.text = label; text.fontSize = 54; text.fontStyle = FontStyle.Bold; text.alignment = TextAnchor.MiddleCenter;
             text.color = new Color(.95f,.98f,1f,.95f); textObject.GetComponent<Shadow>().effectColor = new Color(0,0,0,.9f);
+            CreateGateRing();
+        }
+        void CreateGateRing()
+        {
+            var ring = new GameObject("Time trial gate", typeof(MeshFilter), typeof(MeshRenderer));
+            ring.transform.SetParent(transform, false);
+            ring.transform.localPosition = Vector3.up * 95f;
+            ring.AddComponent<GateBillboard>().cameraToFace = cameraToFace;
+            const int segments = 48;
+            const float radius = 72f, thickness = 5f;
+            var vertices = new Vector3[segments * 2]; var triangles = new int[segments * 6];
+            for (int i = 0; i < segments; i++)
+            {
+                float angle = i * Mathf.PI * 2 / segments;
+                Vector3 direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
+                vertices[i * 2] = direction * (radius - thickness);
+                vertices[i * 2 + 1] = direction * (radius + thickness);
+                int next = (i + 1) % segments, t = i * 6;
+                triangles[t] = i * 2; triangles[t + 1] = next * 2; triangles[t + 2] = i * 2 + 1;
+                triangles[t + 3] = i * 2 + 1; triangles[t + 4] = next * 2; triangles[t + 5] = next * 2 + 1;
+            }
+            var mesh = new Mesh { vertices = vertices, triangles = triangles };
+            mesh.RecalculateBounds(); ring.GetComponent<MeshFilter>().sharedMesh = mesh;
+            var material = new Material(Shader.Find("Sprites/Default")); material.color = new Color(.05f, .95f, 1f, .95f);
+            ring.GetComponent<MeshRenderer>().sharedMaterial = material;
         }
         void LateUpdate()
         {
             if (cameraToFace && visual) visual.rotation = Quaternion.LookRotation(visual.position - cameraToFace.transform.position, cameraToFace.transform.up);
+        }
+    }
+
+    public sealed class GateBillboard : MonoBehaviour
+    {
+        public Camera cameraToFace;
+        void LateUpdate()
+        {
+            if (cameraToFace) transform.rotation = Quaternion.LookRotation(cameraToFace.transform.position - transform.position, cameraToFace.transform.up);
         }
     }
 }
