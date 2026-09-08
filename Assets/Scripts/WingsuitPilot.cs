@@ -70,17 +70,23 @@ namespace EarthWings
             r.TryGetFeatureValue(CommonUsages.gripButton, out bool rightGripClick);
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
+            l.TryGetFeatureValue(CommonUsages.primaryButton, out bool changeMap);
             l.TryGetFeatureValue(CommonUsages.secondaryButton, out bool changeLocation);
             l.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 leftStick);
             r.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 rightPrimaryStick);
             r.TryGetFeatureValue(CommonUsages.secondary2DAxis, out Vector2 rightSecondaryStick);
             Vector2 rightStick = rightPrimaryStick.sqrMagnitude >= rightSecondaryStick.sqrMagnitude ? rightPrimaryStick : rightSecondaryStick;
-            l.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool mode);
+            l.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool leftMode);
+            r.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out bool rightModePrimary);
+            r.TryGetFeatureValue(CommonUsages.secondary2DAxisClick, out bool rightModeSecondary);
+            bool mode = leftMode || rightModePrimary || rightModeSecondary;
             if (mode && !previousMode)
             {
                 freeFlight = !freeFlight; paused = true; localVelocity = Vector3.zero;
                 notice = freeFlight ? "Guida con lo sguardo. Premi A" : calibrated ? "Tuta alare. Premi A" : "Calibra con le braccia aperte e i due grilletti";
             }
+            if (changeMap && !previousY && nextLocation != null)
+            { nextLocation(); Restart(); notice = "Attendi il terreno, poi premi A"; }
             if (changeLocation && !previousY) { Restart(); notice = "Premi A per ripartire"; }
             if (b && !previousB)
             {
@@ -163,7 +169,7 @@ namespace EarthWings
                     { paused = true; notice = "Fine addestramento. Premi B"; }
                 }
             }
-            previousA = a; previousB = b; previousY = changeLocation; previousMode = mode;
+            previousA = a; previousB = b; previousY = changeMap || changeLocation; previousMode = mode;
             int altitude = globeAnchor ? Mathf.RoundToInt((float)globeAnchor.longitudeLatitudeHeight.z) : Mathf.RoundToInt(transform.position.y);
             if (hudBackground) hudBackground.gameObject.SetActive(paused);
             if (readout) readout.text = paused
@@ -172,7 +178,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick SX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia  ·  B pausa";
+                if (paused) instructions.text = "X: Roma / Courmayeur  ·  Stick SX: virata  ·  click stick: modalità\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia  ·  B pausa";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
