@@ -71,6 +71,7 @@ namespace EarthWings
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
             l.TryGetFeatureValue(CommonUsages.secondaryButton, out bool changeLocation);
+            l.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 leftStick);
             r.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 rightPrimaryStick);
             r.TryGetFeatureValue(CommonUsages.secondary2DAxis, out Vector2 rightSecondaryStick);
             Vector2 rightStick = rightPrimaryStick.sqrMagnitude >= rightSecondaryStick.sqrMagnitude ? rightPrimaryStick : rightSecondaryStick;
@@ -138,7 +139,7 @@ namespace EarthWings
                         // Side grip clicks set speed; the index triggers remain altitude.
                         float throttle = (rightGripClick ? 1f : 0f) - (leftGripClick ? 1f : 0f);
                         cruiseSpeed = Mathf.Clamp(cruiseSpeed + throttle * 95f * dt, 10, 180);
-                        transform.Rotate(0, rightStick.x * 58f * dt, 0, Space.Self);
+                        transform.Rotate(0, leftStick.x * 58f * dt, 0, Space.Self);
                         Vector3 direction = transform.InverseTransformDirection(head.forward);
                         direction.y += rt * 1.25f - lt * 1.25f;
                         desired = direction.normalized * cruiseSpeed;
@@ -146,7 +147,7 @@ namespace EarthWings
                     else
                     {
                         float turn = Mathf.Clamp((leftHand.localPosition.y - rightHand.localPosition.y) / .45f, -1, 1);
-                        transform.Rotate(0, (turn * 28 * openness + rightStick.x * 58) * dt, 0, Space.Self);
+                        transform.Rotate(0, (turn * 28 * openness + leftStick.x * 58) * dt, 0, Space.Self);
                         float pitch = Mathf.Asin(Mathf.Clamp(Vector3.Dot(head.forward, transform.up), -1, 1)) * Mathf.Rad2Deg;
                         float climb = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(8, 40, pitch));
                         desired = new Vector3(0, Mathf.Lerp(-Mathf.Lerp(55, 7, openness), 28, climb), Mathf.Lerp(14, 32, openness));
@@ -171,7 +172,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick DX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia  ·  B pausa";
+                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick SX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia  ·  B pausa";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }

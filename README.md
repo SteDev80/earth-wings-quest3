@@ -16,7 +16,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 - A sul controller destro: partire / mettere in pausa.
 - Durante il volo, tenere A: turbo x5.
 - Grip click destro: aumenta la velocità di crociera; grip click sinistro: la riduce.
-- Stick destro sinistra/destra: vira.
+- Stick sinistro sinistra/destra: vira.
 - Grilletto destro: salita; grilletto sinistro: discesa.
 - X sul controller sinistro, tenuto premuto: turbo x5.
 - Y sul controller sinistro: torna al punto di lancio e mette il volo in pausa.
