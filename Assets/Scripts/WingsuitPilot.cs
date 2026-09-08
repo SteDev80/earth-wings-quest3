@@ -66,8 +66,8 @@ namespace EarthWings
             bool handsTracked = Pose(l, leftHand) & Pose(r, rightHand);
             l.TryGetFeatureValue(CommonUsages.trigger, out float lt);
             r.TryGetFeatureValue(CommonUsages.trigger, out float rt);
-            l.TryGetFeatureValue(CommonUsages.triggerButton, out bool leftTriggerClick);
-            r.TryGetFeatureValue(CommonUsages.triggerButton, out bool rightTriggerClick);
+            l.TryGetFeatureValue(CommonUsages.gripButton, out bool leftGripClick);
+            r.TryGetFeatureValue(CommonUsages.gripButton, out bool rightGripClick);
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
             l.TryGetFeatureValue(CommonUsages.primaryButton, out bool boost);
@@ -129,9 +129,8 @@ namespace EarthWings
                     Vector3 desired;
                     if (freeFlight)
                     {
-                        // Full trigger clicks act as the turbo throttle: right accelerates,
-                        // left decelerates. The analog travel remains the altitude control.
-                        float throttle = (rightTriggerClick ? 1f : 0f) - (leftTriggerClick ? 1f : 0f);
+                        // Side grip clicks set speed; the index triggers remain altitude.
+                        float throttle = (rightGripClick ? 1f : 0f) - (leftGripClick ? 1f : 0f);
                         cruiseSpeed = Mathf.Clamp(cruiseSpeed + throttle * 95f * dt, 10, 180);
                         transform.Rotate(0, rightStick.x * 58f * dt, 0, Space.Self);
                         Vector3 direction = transform.InverseTransformDirection(head.forward);
@@ -166,7 +165,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Click trigger DX: accelera  ·  Click SX: frena  ·  Stick DX: virata\nTrigger analogici: quota  ·  A avvia  ·  Y riparti  ·  B località";
+                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick DX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
