@@ -79,9 +79,9 @@ namespace EarthWings
                 freeFlight = !freeFlight; paused = true; localVelocity = Vector3.zero;
                 notice = freeFlight ? "Guida con lo sguardo. Premi A" : calibrated ? "Tuta alare. Premi A" : "Calibra con le braccia aperte e i due grilletti";
             }
-            if (changeLocation && !previousY && nextLocation != null)
+            if (changeLocation && !previousY) { Restart(); notice = "Premi A per ripartire"; }
+            if (b && !previousB && nextLocation != null)
             { nextLocation(); Restart(); notice = "Attendi il terreno, poi premi A"; }
-            if (b && !previousB) { Restart(); notice = "Premi A per ripartire"; }
             float dt = Mathf.Min(Time.deltaTime, .05f);
             bool trackingReady = headTracked && (freeFlight || handsTracked);
             if (!trackingReady)
@@ -162,7 +162,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Grip DX: accelera  ·  Grip SX: frena  ·  Stick DX: virata\nGrilletti: quota  ·  A avvia  ·  B riparti  ·  Y località";
+                if (paused) instructions.text = "Grip DX: accelera  ·  Grip SX: frena  ·  Stick DX: virata\nGrilletti: quota  ·  A avvia  ·  Y riparti  ·  B località";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
