@@ -14,7 +14,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 ## Comandi
 
 - A sul controller destro: partire / mettere in pausa.
-- Stick sinistro avanti/indietro: aumenta o riduce la velocità di crociera.
+- Grip destro: aumenta la velocità di crociera; grip sinistro: la riduce.
 - Stick destro sinistra/destra: vira.
 - Grilletto destro: salita; grilletto sinistro: discesa.
 - X sul controller sinistro, tenuto premuto: turbo x5.

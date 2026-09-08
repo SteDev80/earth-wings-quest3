@@ -64,11 +64,12 @@ namespace EarthWings
             bool handsTracked = Pose(l, leftHand) & Pose(r, rightHand);
             l.TryGetFeatureValue(CommonUsages.trigger, out float lt);
             r.TryGetFeatureValue(CommonUsages.trigger, out float rt);
+            l.TryGetFeatureValue(CommonUsages.grip, out float leftGrip);
+            r.TryGetFeatureValue(CommonUsages.grip, out float rightGrip);
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
             l.TryGetFeatureValue(CommonUsages.primaryButton, out bool boost);
             l.TryGetFeatureValue(CommonUsages.secondaryButton, out bool changeLocation);
-            l.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 stick);
             r.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 rightPrimaryStick);
             r.TryGetFeatureValue(CommonUsages.secondary2DAxis, out Vector2 rightSecondaryStick);
             Vector2 rightStick = rightPrimaryStick.sqrMagnitude >= rightSecondaryStick.sqrMagnitude ? rightPrimaryStick : rightSecondaryStick;
@@ -126,9 +127,8 @@ namespace EarthWings
                     Vector3 desired;
                     if (freeFlight)
                     {
-                        // The left stick is the primary flight control: forward/backward
-                        // changes the held cruising speed, horizontal input turns.
-                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + stick.y * 95f * dt, 10, 180);
+                        // The side grips are the throttle: right accelerates, left brakes.
+                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + (rightGrip - leftGrip) * 95f * dt, 10, 180);
                         transform.Rotate(0, rightStick.x * 58f * dt, 0, Space.Self);
                         Vector3 direction = transform.InverseTransformDirection(head.forward);
                         direction.y += rt * 1.25f - lt * 1.25f;
@@ -162,7 +162,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Stick SX: velocità  ·  Stick DX: virata  ·  grilletti: quota\nA: avvia  ·  B: riparti  ·  Y: località";
+                if (paused) instructions.text = "Grip DX: accelera  ·  Grip SX: frena  ·  Stick DX: virata\nGrilletti: quota  ·  A avvia  ·  B riparti  ·  Y località";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
