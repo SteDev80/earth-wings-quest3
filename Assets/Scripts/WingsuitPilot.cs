@@ -70,7 +70,6 @@ namespace EarthWings
             r.TryGetFeatureValue(CommonUsages.gripButton, out bool rightGripClick);
             r.TryGetFeatureValue(CommonUsages.primaryButton, out bool a);
             r.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b);
-            l.TryGetFeatureValue(CommonUsages.primaryButton, out bool boost);
             l.TryGetFeatureValue(CommonUsages.secondaryButton, out bool changeLocation);
             r.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 rightPrimaryStick);
             r.TryGetFeatureValue(CommonUsages.secondary2DAxis, out Vector2 rightSecondaryStick);
@@ -85,6 +84,7 @@ namespace EarthWings
             if (b && !previousB && nextLocation != null)
             { nextLocation(); Restart(); notice = "Attendi il terreno, poi premi A"; }
             float dt = Mathf.Min(Time.deltaTime, .05f);
+            bool boost = false;
             bool trackingReady = headTracked && (freeFlight || handsTracked);
             if (!trackingReady)
             {
@@ -112,11 +112,11 @@ namespace EarthWings
                 else
                 {
                     calibrationTime = 0;
-                    if (a && !previousA && (freeFlight || calibrated))
+                    if (a && !previousA && paused && (freeFlight || calibrated))
                     {
-                        if (paused && mapMode && !Physics.Raycast(head.position, -transform.up, 50000))
+                        if (mapMode && !Physics.Raycast(head.position, -transform.up, 50000))
                             notice = "Attendi il caricamento del terreno";
-                        else { paused = !paused; notice = ""; }
+                        else { paused = false; notice = ""; }
                     }
                 }
                 if (handsTracked)
@@ -124,6 +124,8 @@ namespace EarthWings
                     float target = Mathf.InverseLerp(span * .25f, span * .9f, Vector3.Distance(leftHand.localPosition, rightHand.localPosition));
                     openness = Mathf.Lerp(openness, target, 1 - Mathf.Exp(-dt * 5));
                 }
+                // A starts the paused flight. Once airborne, holding A is turbo.
+                boost = a && !paused;
                 if (!paused && (freeFlight || calibrated))
                 {
                     Vector3 desired;
@@ -165,7 +167,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick DX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia";
+                if (paused) instructions.text = "Grip click DX: accelera  ·  Grip click SX: frena  ·  Stick DX: virata\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia / turbo";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
