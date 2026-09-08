@@ -15,6 +15,7 @@ namespace EarthWings
         public string locationName = "";
         public System.Action nextLocation, returnToLaunch;
         public CesiumGlobeAnchor globeAnchor;
+        public bool IsFlying => !paused;
         Vector3 localVelocity;
         float span = 1.35f, openness, calibrationTime, cruiseSpeed = 90;
         bool calibrated, paused = true, freeFlight = true, previousA, previousB, previousY, previousMode, trackingWasLost;
@@ -34,6 +35,7 @@ namespace EarthWings
             else transform.position = Vector3.up * launchHeight;
             transform.rotation = Quaternion.identity;
             localVelocity = Vector3.zero; paused = true;
+            TimeTrialRace.ResetRace();
             if (globeAnchor) globeAnchor.Sync();
         }
         static bool Pose(InputDevice d, Transform t)
@@ -161,7 +163,7 @@ namespace EarthWings
             if (hudBackground) hudBackground.gameObject.SetActive(paused);
             if (readout) readout.text = paused
                 ? (mapMode ? locationName : "ADDESTRAMENTO") + "  ·  " + (freeFlight ? "LIBERO" : "TUTA") + "  ·  " + notice
-                : Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h   ·   " + altitude + " m";
+                : Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h   ·   " + altitude + " m" + TimeTrialRace.Status;
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);

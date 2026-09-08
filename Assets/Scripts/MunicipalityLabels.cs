@@ -21,11 +21,12 @@ namespace EarthWings
         {
             foreach (var place in Places)
             {
-                var marker = new GameObject("Comune " + place.name, typeof(CesiumGlobeAnchor), typeof(MunicipalityBillboard));
+                var marker = new GameObject("Comune " + place.name, typeof(CesiumGlobeAnchor), typeof(MunicipalityBillboard), typeof(TimeTrialGate));
                 marker.transform.SetParent(parent, false);
                 marker.GetComponent<CesiumGlobeAnchor>().longitudeLatitudeHeight = new double3(place.lon, place.lat, place.height);
                 var billboard = marker.GetComponent<MunicipalityBillboard>();
                 billboard.label = place.name; billboard.cameraToFace = camera;
+                marker.GetComponent<TimeTrialGate>().gateName = place.name;
             }
         }
     }
