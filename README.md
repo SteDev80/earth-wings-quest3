@@ -20,7 +20,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 - Grilletto destro: salita; grilletto sinistro: discesa.
 - X sul controller sinistro, tenuto premuto: turbo x5.
 - Y sul controller sinistro: torna al punto di lancio e mette il volo in pausa.
-- B sul controller destro: alterna Courmayeur (Valle d'Aosta) e Roma. Il cambio riporta in quota e in pausa; attendere il terreno e premere A.
+- B sul controller destro: mette in pausa o riprende il volo.
 - L'app parte in volo libero, in pausa. Il clic sullo stick sinistro alterna volo libero e tuta alare. La tuta alare richiede una calibrazione: braccia aperte e entrambi i grilletti premuti per 1,5 secondi.
 - La perdita del tracking del visore o del focus mette in pausa. Nel volo libero la perdita del tracking posizionale delle mani non interrompe il volo.
 
