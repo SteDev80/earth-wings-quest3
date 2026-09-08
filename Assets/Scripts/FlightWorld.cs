@@ -33,7 +33,6 @@ namespace EarthWings
             cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = new Color(.32f,.58f,.73f);
             pilot.leftHand = Hand(rig.transform, "Left", new Color(.1f,.9f,.8f));
             pilot.rightHand = Hand(rig.transform, "Right", new Color(1,.6f,.2f));
-            HelmetRim(pilot.head);
             var panel = new GameObject("Flight display", typeof(Canvas));
             panel.transform.SetParent(pilot.head, false);
             panel.transform.localPosition = new Vector3(0,0,1.8f);
@@ -113,30 +112,11 @@ namespace EarthWings
         }
         static Transform Hand(Transform parent, string name, Color color)
         {
-            var root = new GameObject(name + " glove"); root.transform.SetParent(parent, false);
-            var glove = new Material(Shader.Find("Standard")); glove.color = Color.Lerp(color, new Color(.025f,.03f,.04f), .72f);
-            glove.SetFloat("_Metallic", .25f); glove.SetFloat("_Glossiness", .6f);
-            var accent = new Material(Shader.Find("Standard")); accent.color = color;
-            Part(root.transform, "Palm", PrimitiveType.Cube, new Vector3(0,0,.025f), new Vector3(.12f,.07f,.16f), glove);
-            Part(root.transform, "Cuff", PrimitiveType.Cylinder, new Vector3(0,-.055f,-.045f), new Vector3(.07f,.04f,.07f), accent);
-            for (int i = -1; i <= 2; i++)
-                Part(root.transform, "Finger", PrimitiveType.Capsule, new Vector3(i * .023f - .012f,.012f,.115f), new Vector3(.018f,.05f,.018f), glove);
-            Part(root.transform, "Thumb", PrimitiveType.Capsule, new Vector3(-.07f,-.005f,.035f), new Vector3(.02f,.045f,.02f), glove).localRotation = Quaternion.Euler(0,0,55);
-            return root.transform;
-        }
-        static void HelmetRim(Transform head)
-        {
-            var rim = new GameObject("Helmet rim"); rim.transform.SetParent(head, false);
-            var material = new Material(Shader.Find("Standard")); material.color = new Color(.008f,.012f,.016f);
-            Part(rim.transform, "Top rim", PrimitiveType.Cube, new Vector3(0,.31f,.62f), new Vector3(1.05f,.035f,.035f), material);
-            Part(rim.transform, "Left rim", PrimitiveType.Cube, new Vector3(-.51f,.05f,.62f), new Vector3(.035f,.53f,.035f), material);
-            Part(rim.transform, "Right rim", PrimitiveType.Cube, new Vector3(.51f,.05f,.62f), new Vector3(.035f,.53f,.035f), material);
-        }
-        static Transform Part(Transform parent, string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Material material)
-        {
-            var part = GameObject.CreatePrimitive(primitive); part.name = name; part.transform.SetParent(parent, false);
-            part.transform.localPosition = position; part.transform.localScale = scale; Destroy(part.GetComponent<Collider>());
-            part.GetComponent<Renderer>().sharedMaterial = material; return part.transform;
+            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = name;
+            go.transform.SetParent(parent, false); go.transform.localScale = Vector3.one * .09f;
+            Destroy(go.GetComponent<Collider>());
+            go.GetComponent<Renderer>().material.color = color;
+            return go.transform;
         }
         static void TrainingGround()
         {
