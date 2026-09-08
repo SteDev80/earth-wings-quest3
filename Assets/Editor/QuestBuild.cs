@@ -62,6 +62,8 @@ public static class QuestBuild
         foreach (var feature in openXR.GetFeatures<UnityEngine.XR.OpenXR.Features.OpenXRFeature>())
             if (feature.GetType().Name.Contains("OculusTouchControllerProfile") || feature.GetType().Name.Contains("MetaQuestFeature"))
             { feature.enabled = true; EditorUtility.SetDirty(feature); enabledCount++; }
+            else if (feature.GetType().Name.Contains("HandInteractionProfile"))
+            { feature.enabled = true; EditorUtility.SetDirty(feature); }
         if (enabledCount != 2) throw new Exception("Required Quest OpenXR features missing: " + enabledCount);
         EditorUtility.SetDirty(general); EditorUtility.SetDirty(general.Manager); EditorUtility.SetDirty(openXR);
         System.IO.Directory.CreateDirectory("Assets/Scenes");
