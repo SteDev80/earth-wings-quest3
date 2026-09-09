@@ -83,10 +83,16 @@ namespace EarthWings
                 tiles.maximumScreenSpaceError = 24; tiles.maximumSimultaneousTileLoads = 14;
                 tiles.maximumCachedBytes = 768 * 1024 * 1024; tiles.loadingDescendantLimit = 96;
                 tiles.enableFrustumCulling = false;
+                tiles.enableFogCulling = false;
                 tiles.enforceCulledScreenSpaceError = true; tiles.culledScreenSpaceError = 72;
+                tiles.forbidHoles = true;
                 tiles.createPhysicsMeshes = true;
                 tiles.preloadAncestors = true; tiles.preloadSiblings = true;
                 tiles.showCreditsOnScreen = true;
+                var horizon = rig.AddComponent<HighAltitudeStreamingProfile>();
+                horizon.pilot = pilot;
+                horizon.cameraToTune = cam;
+                horizon.tileset = tiles;
                 pilot.launchHeight = config.launchHeight; pilot.mapMode = true;
                 pilot.locationName = "VALLE D'AOSTA / COURMAYEUR";
                 bool inValley = true;
