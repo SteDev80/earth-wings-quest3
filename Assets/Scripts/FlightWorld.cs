@@ -30,7 +30,7 @@ namespace EarthWings
             // At 3 km altitude the geographic horizon is roughly 200 km away. The old
             // 15 km far plane cut off the streamed tiles, leaving an artificial ring.
             cam.nearClipPlane = .15f; cam.farClipPlane = 300000;
-            cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = new Color(.32f,.58f,.73f);
+            cam.clearFlags = CameraClearFlags.Skybox; cam.backgroundColor = new Color(.32f,.58f,.73f);
             pilot.leftHand = Hand(rig.transform, "Left", new Color(.1f,.9f,.8f));
             pilot.rightHand = Hand(rig.transform, "Right", new Color(1,.6f,.2f));
             var panel = new GameObject("Flight display", typeof(Canvas));
@@ -48,9 +48,19 @@ namespace EarthWings
             pilot.hudBackground = backdrop.GetComponent<Image>();
             pilot.readout = HudLabel(panel.transform, "Flight status", new Vector2(0,-440), new Vector2(880,55), 16);
             pilot.instructions = HudLabel(panel.transform, "Controls", new Vector2(0,-500), new Vector2(880,75), 20);
+            NavigationHud.Add(panel.transform, pilot, cam);
             var sun = new GameObject("Sun", typeof(Light)); sun.transform.rotation = Quaternion.Euler(45,-30,0);
             sun.GetComponent<Light>().type = LightType.Directional;
             RenderSettings.ambientLight = new Color(.65f,.7f,.75f);
+            var skyShader = Shader.Find("Skybox/Procedural");
+            if (skyShader)
+            {
+                var sky = new Material(skyShader);
+                sky.SetColor("_SkyTint", new Color(.38f,.62f,.86f));
+                sky.SetFloat("_AtmosphereThickness", 1.15f);
+                sky.SetFloat("_Exposure", 1.08f);
+                RenderSettings.skybox = sky;
+            }
             // A light atmospheric veil hides LOD transitions at the distant horizon.
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
@@ -69,10 +79,10 @@ namespace EarthWings
                 tiles.ionAssetID = config.assetId; tiles.ionAccessToken = config.ionToken;
                 // The high-altitude view benefits from an ample cache and more parallel loads.
                 // Geometry remains at a coarse LOD while the user is far above the ground.
-                tiles.maximumScreenSpaceError = 36; tiles.maximumSimultaneousTileLoads = 16;
-                tiles.maximumCachedBytes = 768 * 1024 * 1024; tiles.loadingDescendantLimit = 80;
+                tiles.maximumScreenSpaceError = 18; tiles.maximumSimultaneousTileLoads = 24;
+                tiles.maximumCachedBytes = 1024 * 1024 * 1024; tiles.loadingDescendantLimit = 160;
                 tiles.enableFrustumCulling = false;
-                tiles.enforceCulledScreenSpaceError = true; tiles.culledScreenSpaceError = 96;
+                tiles.enforceCulledScreenSpaceError = true; tiles.culledScreenSpaceError = 48;
                 tiles.createPhysicsMeshes = true;
                 tiles.preloadAncestors = true; tiles.preloadSiblings = true;
                 tiles.showCreditsOnScreen = true;

@@ -13,15 +13,15 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 
 ## Comandi
 
-- A sul controller destro: partire / mettere in pausa.
-- Durante il volo, tenere A: turbo x5.
+- A sul controller destro: partire; durante il volo e' turbo x3.
+- Durante il volo, tenere A: turbo x3.
 - Grip click destro: aumenta la velocità di crociera; grip click sinistro: la riduce.
 - Stick sinistro sinistra/destra: vira.
 - Grilletto destro: salita; grilletto sinistro: discesa.
-- X sul controller sinistro, tenuto premuto: turbo x5.
 - Y sul controller sinistro: torna al punto di lancio e mette il volo in pausa.
 - B sul controller destro: mette in pausa o riprende il volo.
 - X sul controller sinistro: alterna Courmayeur e Roma; riporta in quota e in pausa.
+- La minimappa in basso a sinistra mostra la sagoma dell'Italia e il punto corrente. La bussola in basso indica i punti cardinali.
 - L'app parte in volo libero, in pausa. Il clic sullo stick sinistro alterna volo libero e tuta alare. La tuta alare richiede una calibrazione: braccia aperte e entrambi i grilletti premuti per 1,5 secondi.
 - La perdita del tracking del visore o del focus mette in pausa. Nel volo libero la perdita del tracking posizionale delle mani non interrompe il volo.
 

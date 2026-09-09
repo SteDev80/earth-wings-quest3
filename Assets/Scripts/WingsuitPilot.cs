@@ -158,7 +158,7 @@ namespace EarthWings
                         float climb = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(8, 40, pitch));
                         desired = new Vector3(0, Mathf.Lerp(-Mathf.Lerp(55, 7, openness), 28, climb), Mathf.Lerp(14, 32, openness));
                     }
-                    desired *= boost ? 5f : 1f;
+                    desired *= boost ? 3f : 1f;
                     localVelocity = Vector3.Lerp(localVelocity, desired, 1 - Mathf.Exp(-dt * .8f));
                     Vector3 step = transform.TransformDirection(localVelocity) * dt;
                     if (step.sqrMagnitude > .000001f && Physics.SphereCast(head.position, .4f, step.normalized, out _, step.magnitude + .5f, ~0, QueryTriggerInteraction.Ignore))
