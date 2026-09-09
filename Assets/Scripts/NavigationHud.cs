@@ -85,15 +85,8 @@ namespace EarthWings
             if (compassText)
             {
                 float heading = pilot.transform.eulerAngles.y;
-                compassText.text = Cardinal(heading) + "  " + Mathf.RoundToInt(heading).ToString("000") + "  |  N  E  S  O";
+                compassText.text = Mathf.RoundToInt(heading).ToString("000") + "°";
             }
-        }
-
-        static string Cardinal(float degrees)
-        {
-            string[] names = { "N", "NE", "E", "SE", "S", "SO", "O", "NO" };
-            int index = Mathf.RoundToInt(Mathf.Repeat(degrees, 360f) / 45f) % names.Length;
-            return names[index];
         }
     }
 
