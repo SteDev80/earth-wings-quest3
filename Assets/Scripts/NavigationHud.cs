@@ -31,11 +31,11 @@ namespace EarthWings
             AddLabel(root.transform, "O", new Vector2(-126, 6), new Vector2(34, 24), 18, TextAnchor.MiddleCenter);
             AddLabel(root.transform, "E", new Vector2(126, 6), new Vector2(34, 24), 18, TextAnchor.MiddleCenter);
 
-            var pin = new GameObject("Current position", typeof(RectTransform), typeof(Image));
+            var pin = new GameObject("Current position", typeof(RectTransform), typeof(MapHeadingTriangle));
             pin.transform.SetParent(root.transform, false);
             var pinRect = pin.GetComponent<RectTransform>();
-            pinRect.sizeDelta = new Vector2(18, 18);
-            pin.GetComponent<Image>().color = new Color(1f, .35f, .06f, .95f);
+            pinRect.sizeDelta = new Vector2(26, 34);
+            pin.GetComponent<MapHeadingTriangle>().color = new Color(1f, .28f, .04f, .95f);
 
             var location = AddLabel(root.transform, "ITALIA", new Vector2(0, -132), new Vector2(270, 30), 19, TextAnchor.MiddleCenter);
             var compass = AddLabel(parent, "Compass", new Vector2(0, -360), new Vector2(560, 38), 22, TextAnchor.MiddleCenter);
@@ -79,6 +79,7 @@ namespace EarthWings
                     position = new Vector2((x - .5f) * 230f, (y - .5f) * 205f);
                 }
                 marker.anchoredPosition = position;
+                marker.localRotation = Quaternion.Euler(0, 0, -pilot.transform.eulerAngles.y);
             }
             if (locationText)
                 locationText.text = pilot.mapMode ? pilot.locationName : "AREA DI ADDESTRAMENTO";
@@ -87,6 +88,22 @@ namespace EarthWings
                 float heading = pilot.transform.eulerAngles.y;
                 compassText.text = Mathf.RoundToInt(heading).ToString("000") + "°";
             }
+        }
+    }
+
+    public sealed class MapHeadingTriangle : Graphic
+    {
+        protected override void OnPopulateMesh(VertexHelper vh)
+        {
+            vh.Clear();
+            var rect = rectTransform.rect;
+            var top = new Vector2(0, rect.yMax);
+            var left = new Vector2(rect.xMin, rect.yMin);
+            var right = new Vector2(rect.xMax, rect.yMin);
+            vh.AddVert(top, color, Vector2.zero);
+            vh.AddVert(left, color, Vector2.zero);
+            vh.AddVert(right, color, Vector2.zero);
+            vh.AddTriangle(0, 1, 2);
         }
     }
 
