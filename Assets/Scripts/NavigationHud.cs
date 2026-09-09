@@ -89,8 +89,15 @@ namespace EarthWings
             if (compassText)
             {
                 float heading = pilot.transform.eulerAngles.y;
-                compassText.text = Mathf.RoundToInt(heading).ToString("000") + "°";
+                compassText.text = Mathf.RoundToInt(heading).ToString("000") + "° " + DirectionName(heading);
             }
+        }
+
+        static string DirectionName(float degrees)
+        {
+            string[] names = { "NORD", "NORD-EST", "EST", "SUD-EST", "SUD", "SUD-OVEST", "OVEST", "NORD-OVEST" };
+            int index = Mathf.RoundToInt(Mathf.Repeat(degrees, 360f) / 45f) % names.Length;
+            return names[index];
         }
 
         static string RegionFor(double lon, double lat)

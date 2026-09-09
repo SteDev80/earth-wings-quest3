@@ -13,7 +13,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 
 ## Comandi
 
-- A sul controller destro: partire; durante il volo tiene il turbo fino a circa 10000 km/h.
+- A sul controller destro: partire; durante il volo tiene il turbo fino a circa 20000 km/h.
 - Grip click destro: aumenta la velocità di crociera; grip click sinistro: la riduce.
 - Stick sinistro sinistra/destra: vira.
 - Grilletto destro: salita; grilletto sinistro: discesa.

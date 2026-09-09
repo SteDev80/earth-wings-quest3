@@ -7,7 +7,7 @@ namespace EarthWings
 {
     public sealed class WingsuitPilot : MonoBehaviour
     {
-        const float TurboSpeedMetersPerSecond = 10000f / 3.6f;
+        const float TurboSpeedMetersPerSecond = 20000f / 3.6f;
         public Transform head, leftHand, rightHand;
         public Text readout, instructions;
         public Image hudBackground;
