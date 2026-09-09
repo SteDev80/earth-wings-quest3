@@ -50,7 +50,9 @@ L'integrazione attiva mesh fisiche e crediti Cesium. Le attribuzioni devono esse
 
 ## Immagini
 
-Le schermate VR vengono acquisite da un Quest collegato con `adb exec-out screencap -p`. Non sono incluse nel repository quando il visore non è connesso: nessuna immagine di esempio viene generata artificialmente.
+Le schermate VR vengono acquisite da un Quest collegato con `adb exec-out screencap -p`.
+
+![Schermata Quest con minimappa e bussola](docs/screenshots/quest-flight.png)
 
 ## Limiti del prototipo
 

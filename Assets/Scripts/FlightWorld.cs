@@ -57,6 +57,7 @@ namespace EarthWings
             {
                 var sky = new Material(skyShader);
                 sky.SetColor("_SkyTint", new Color(.38f,.62f,.86f));
+                sky.SetColor("_GroundColor", new Color(.42f,.63f,.82f));
                 sky.SetFloat("_AtmosphereThickness", 1.15f);
                 sky.SetFloat("_Exposure", 1.08f);
                 RenderSettings.skybox = sky;
@@ -122,10 +123,8 @@ namespace EarthWings
         }
         static Transform Hand(Transform parent, string name, Color color)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Sphere); go.name = name;
-            go.transform.SetParent(parent, false); go.transform.localScale = Vector3.one * .09f;
-            Destroy(go.GetComponent<Collider>());
-            go.GetComponent<Renderer>().material.color = color;
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
             return go.transform;
         }
         static void TrainingGround()
