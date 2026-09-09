@@ -21,10 +21,13 @@ namespace EarthWings
             var image = root.GetComponent<Image>();
             image.color = new Color(.01f, .035f, .07f, .55f);
 
-            var map = new GameObject("Italy map", typeof(RectTransform), typeof(ItalyMapGraphic));
+            var map = new GameObject("Italy map", typeof(RectTransform), typeof(RawImage));
             map.transform.SetParent(root.transform, false);
             map.GetComponent<RectTransform>().sizeDelta = new Vector2(250, 230);
             map.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 12);
+            var rawMap = map.GetComponent<RawImage>();
+            rawMap.texture = ItalyMapTexture.Create();
+            rawMap.color = Color.white;
 
             AddLabel(root.transform, "N", new Vector2(0, 126), new Vector2(34, 24), 22, TextAnchor.MiddleCenter);
             AddLabel(root.transform, "S", new Vector2(0, -104), new Vector2(34, 24), 18, TextAnchor.MiddleCenter);
@@ -137,7 +140,7 @@ namespace EarthWings
         }
     }
 
-    public sealed class ItalyMapGraphic : Graphic
+    static class ItalyMapTexture
     {
         static readonly Vector2[] Mainland =
         {
@@ -173,73 +176,108 @@ namespace EarthWings
             new [] { new Vector2(7.3f,41.8f), new Vector2(7.4f,40.4f), new Vector2(7.5f,39.1f), new Vector2(8.4f,38.2f) },
             new [] { new Vector2(9.5f,41.7f), new Vector2(10.9f,40.6f), new Vector2(12.3f,39.4f), new Vector2(14.5f,38.7f) }
         };
+        static Texture2D cached;
 
-        protected override void OnPopulateMesh(VertexHelper vh)
+        public static Texture2D Create()
         {
-            vh.Clear();
-            DrawRect(vh, rectTransform.rect, new Color(.02f, .18f, .30f, .62f));
-            foreach (var line in Bathymetry)
-                DrawPolyline(vh, line, new Color(.13f, .62f, .88f, .55f), 2.4f);
-            DrawPolygon(vh, Mainland, new Color(.13f, .36f, .25f, .82f));
-            DrawPolygon(vh, Sicily, new Color(.13f, .36f, .25f, .82f));
-            DrawPolygon(vh, Sardinia, new Color(.13f, .36f, .25f, .82f));
-            DrawPolyline(vh, Mainland, new Color(.72f, .98f, .78f, .95f), 5f);
-            DrawPolyline(vh, Sicily, new Color(.72f, .98f, .78f, .95f), 4.5f);
-            DrawPolyline(vh, Sardinia, new Color(.72f, .98f, .78f, .95f), 4.5f);
-        }
-
-        void DrawRect(VertexHelper vh, Rect rect, Color color)
-        {
-            int start = vh.currentVertCount;
-            vh.AddVert(new Vector2(rect.xMin, rect.yMin), color, Vector2.zero);
-            vh.AddVert(new Vector2(rect.xMin, rect.yMax), color, Vector2.zero);
-            vh.AddVert(new Vector2(rect.xMax, rect.yMax), color, Vector2.zero);
-            vh.AddVert(new Vector2(rect.xMax, rect.yMin), color, Vector2.zero);
-            vh.AddTriangle(start, start + 1, start + 2);
-            vh.AddTriangle(start + 2, start + 3, start);
-        }
-
-        void DrawPolygon(VertexHelper vh, Vector2[] points, Color color)
-        {
-            int centerIndex = vh.currentVertCount;
-            Vector2 center = Vector2.zero;
-            for (int i = 0; i < points.Length - 1; i++) center += ToRect(points[i]);
-            center /= Mathf.Max(1, points.Length - 1);
-            vh.AddVert(center, color, Vector2.zero);
-            for (int i = 0; i < points.Length - 1; i++)
-                vh.AddVert(ToRect(points[i]), color, Vector2.zero);
-            for (int i = 0; i < points.Length - 1; i++)
+            if (cached) return cached;
+            const int width = 512, height = 512;
+            cached = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            cached.wrapMode = TextureWrapMode.Clamp;
+            cached.filterMode = FilterMode.Trilinear;
+            var pixels = new Color32[width * height];
+            var seaTop = new Color32(9, 63, 104, 210);
+            var seaBottom = new Color32(2, 26, 52, 225);
+            for (int y = 0; y < height; y++)
             {
-                int next = i == points.Length - 2 ? 1 : i + 2;
-                vh.AddTriangle(centerIndex, centerIndex + i + 1, centerIndex + next);
+                float t = y / (float)(height - 1);
+                var sea = Color32.Lerp(seaBottom, seaTop, t);
+                for (int x = 0; x < width; x++) pixels[y * width + x] = sea;
+            }
+            FillPolygon(pixels, width, height, Mainland, new Color32(34, 89, 60, 235));
+            FillPolygon(pixels, width, height, Sicily, new Color32(34, 89, 60, 235));
+            FillPolygon(pixels, width, height, Sardinia, new Color32(34, 89, 60, 235));
+            foreach (var line in Bathymetry)
+                DrawPolyline(pixels, width, height, line, new Color32(65, 196, 239, 140), 3);
+            DrawPolyline(pixels, width, height, Mainland, new Color32(185, 255, 198, 250), 5);
+            DrawPolyline(pixels, width, height, Sicily, new Color32(185, 255, 198, 250), 5);
+            DrawPolyline(pixels, width, height, Sardinia, new Color32(185, 255, 198, 250), 5);
+            DrawMountainStroke(pixels, width, height);
+            cached.SetPixels32(pixels);
+            cached.Apply(false, true);
+            return cached;
+        }
+
+        static void FillPolygon(Color32[] pixels, int width, int height, Vector2[] points, Color32 color)
+        {
+            var polygon = new Vector2[points.Length];
+            for (int i = 0; i < points.Length; i++) polygon[i] = ToPixel(points[i], width, height);
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    if (Contains(polygon, x + .5f, y + .5f)) Blend(pixels, y * width + x, color);
+        }
+
+        static bool Contains(Vector2[] polygon, float x, float y)
+        {
+            bool inside = false;
+            for (int i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+            {
+                var a = polygon[i]; var b = polygon[j];
+                if (((a.y > y) != (b.y > y)) && x < (b.x - a.x) * (y - a.y) / (b.y - a.y + .0001f) + a.x)
+                    inside = !inside;
+            }
+            return inside;
+        }
+
+        static void DrawPolyline(Color32[] pixels, int textureWidth, int textureHeight, Vector2[] points, Color32 color, int width)
+        {
+            for (int i = 0; i < points.Length - 1; i++)
+                DrawLine(pixels, textureWidth, textureHeight, ToPixel(points[i], textureWidth, textureHeight), ToPixel(points[i + 1], textureWidth, textureHeight), color, width);
+        }
+
+        static void DrawMountainStroke(Color32[] pixels, int width, int height)
+        {
+            var alps = new[] { new Vector2(6.9f,45.6f), new Vector2(8.6f,45.3f), new Vector2(10.4f,45.4f), new Vector2(12.2f,45.7f), new Vector2(13.4f,45.8f) };
+            var apennines = new[] { new Vector2(10.0f,44.0f), new Vector2(11.3f,43.0f), new Vector2(12.7f,41.9f), new Vector2(14.2f,40.6f), new Vector2(15.6f,39.1f) };
+            DrawPolyline(pixels, width, height, alps, new Color32(126, 171, 126, 150), 2);
+            DrawPolyline(pixels, width, height, apennines, new Color32(126, 171, 126, 135), 2);
+        }
+
+        static void DrawLine(Color32[] pixels, int textureWidth, int textureHeight, Vector2 a, Vector2 b, Color32 color, int width)
+        {
+            int steps = Mathf.CeilToInt(Vector2.Distance(a, b));
+            for (int i = 0; i <= steps; i++)
+            {
+                var p = Vector2.Lerp(a, b, i / (float)Mathf.Max(1, steps));
+                int radius = Mathf.Max(1, width);
+                for (int oy = -radius; oy <= radius; oy++)
+                    for (int ox = -radius; ox <= radius; ox++)
+                    {
+                        if (ox * ox + oy * oy > radius * radius) continue;
+                        int x = Mathf.RoundToInt(p.x) + ox;
+                        int y = Mathf.RoundToInt(p.y) + oy;
+                        if (x < 0 || x >= textureWidth || y < 0 || y >= textureHeight) continue;
+                        Blend(pixels, y * textureWidth + x, color);
+                    }
             }
         }
 
-        void DrawPolyline(VertexHelper vh, Vector2[] points, Color color, float width)
+        static Vector2 ToPixel(Vector2 lonLat, int width, int height)
         {
-            for (int i = 0; i < points.Length - 1; i++)
-                AddLine(vh, ToRect(points[i]), ToRect(points[i + 1]), color, width);
+            float x = Mathf.InverseLerp(6f, 18.8f, lonLat.x) * (width - 1);
+            float y = Mathf.InverseLerp(36f, 47.8f, lonLat.y) * (height - 1);
+            return new Vector2(x, y);
         }
 
-        Vector2 ToRect(Vector2 lonLat)
+        static void Blend(Color32[] pixels, int index, Color32 source)
         {
-            var rect = rectTransform.rect;
-            float x = Mathf.InverseLerp(6f, 18.8f, lonLat.x);
-            float y = Mathf.InverseLerp(36f, 47.8f, lonLat.y);
-            return new Vector2(rect.xMin + x * rect.width, rect.yMin + y * rect.height);
-        }
-
-        static void AddLine(VertexHelper vh, Vector2 a, Vector2 b, Color color, float width)
-        {
-            Vector2 direction = (b - a).normalized;
-            Vector2 normal = new Vector2(-direction.y, direction.x) * (width * .5f);
-            int start = vh.currentVertCount;
-            vh.AddVert(a - normal, color, Vector2.zero);
-            vh.AddVert(a + normal, color, Vector2.zero);
-            vh.AddVert(b + normal, color, Vector2.zero);
-            vh.AddVert(b - normal, color, Vector2.zero);
-            vh.AddTriangle(start, start + 1, start + 2);
-            vh.AddTriangle(start + 2, start + 3, start);
+            float alpha = source.a / 255f;
+            var dest = pixels[index];
+            pixels[index] = new Color32(
+                (byte)Mathf.RoundToInt(source.r * alpha + dest.r * (1f - alpha)),
+                (byte)Mathf.RoundToInt(source.g * alpha + dest.g * (1f - alpha)),
+                (byte)Mathf.RoundToInt(source.b * alpha + dest.b * (1f - alpha)),
+                255);
         }
     }
 }

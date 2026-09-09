@@ -78,12 +78,12 @@ namespace EarthWings
                 var tilesObject = new GameObject("Photorealistic tiles"); tilesObject.transform.SetParent(globe.transform, false);
                 var tiles = tilesObject.AddComponent<Cesium3DTileset>();
                 tiles.ionAssetID = config.assetId; tiles.ionAccessToken = config.ionToken;
-                // The high-altitude view benefits from an ample cache and more parallel loads.
-                // Geometry remains at a coarse LOD while the user is far above the ground.
-                tiles.maximumScreenSpaceError = 18; tiles.maximumSimultaneousTileLoads = 24;
-                tiles.maximumCachedBytes = 1024 * 1024 * 1024; tiles.loadingDescendantLimit = 160;
+                // Keep detail high without flooding the Quest streaming budget.
+                // Over-aggressive tile requests can leave the view stuck on coarse LODs.
+                tiles.maximumScreenSpaceError = 24; tiles.maximumSimultaneousTileLoads = 14;
+                tiles.maximumCachedBytes = 768 * 1024 * 1024; tiles.loadingDescendantLimit = 96;
                 tiles.enableFrustumCulling = false;
-                tiles.enforceCulledScreenSpaceError = true; tiles.culledScreenSpaceError = 48;
+                tiles.enforceCulledScreenSpaceError = true; tiles.culledScreenSpaceError = 72;
                 tiles.createPhysicsMeshes = true;
                 tiles.preloadAncestors = true; tiles.preloadSiblings = true;
                 tiles.showCreditsOnScreen = true;
