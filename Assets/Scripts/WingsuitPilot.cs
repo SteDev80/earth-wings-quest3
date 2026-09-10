@@ -136,16 +136,14 @@ namespace EarthWings
                     float target = Mathf.InverseLerp(span * .25f, span * .9f, Vector3.Distance(leftHand.localPosition, rightHand.localPosition));
                     openness = Mathf.Lerp(openness, target, 1 - Mathf.Exp(-dt * 5));
                 }
-                // A starts the paused flight. Once airborne, holding A is turbo.
-                boost = a && !paused;
+                // A starts the paused flight. Once airborne, right grip is turbo.
+                boost = rightGripClick && !paused;
                 if (!paused && (freeFlight || calibrated))
                 {
                     Vector3 desired;
                     if (freeFlight)
                     {
-                        // Side grip clicks set speed; the index triggers remain altitude.
-                        float throttle = (rightGripClick ? 1f : 0f) - (leftGripClick ? 1f : 0f);
-                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + throttle * 95f * dt, 10, 180);
+                        cruiseSpeed = Mathf.Clamp(cruiseSpeed + leftStick.y * 120f * dt, 10, 240);
                         transform.Rotate(0, leftStick.x * 58f * dt, 0, Space.Self);
                         Vector3 direction = transform.InverseTransformDirection(head.forward);
                         direction.y += rt * 1.25f - lt * 1.25f;
@@ -159,6 +157,8 @@ namespace EarthWings
                         float climb = Mathf.SmoothStep(0, 1, Mathf.InverseLerp(8, 40, pitch));
                         desired = new Vector3(0, Mathf.Lerp(-Mathf.Lerp(55, 7, openness), 28, climb), Mathf.Lerp(14, 32, openness));
                     }
+                    if (leftGripClick)
+                        desired *= .35f;
                     if (boost && desired.sqrMagnitude > .001f)
                         desired = desired.normalized * TurboSpeedMetersPerSecond;
                     localVelocity = Vector3.Lerp(localVelocity, desired, 1 - Mathf.Exp(-dt * .8f));
@@ -180,7 +180,7 @@ namespace EarthWings
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "X: Roma / Courmayeur  ·  Stick SX: virata  ·  click stick: modalità\nTrigger DX: sali  ·  Trigger SX: scendi  ·  A avvia  ·  B pausa";
+                if (paused) instructions.text = "Stick SX: velocità + virata  ·  Grip DX: turbo  ·  Grip SX: freno\nTrigger DX/SX: sali/scendi  ·  X luogo  ·  Y reset  ·  A start  ·  B pausa";
             }
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
