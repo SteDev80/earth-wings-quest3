@@ -175,13 +175,21 @@ namespace EarthWings
             int altitude = globeAnchor ? Mathf.RoundToInt((float)globeAnchor.longitudeLatitudeHeight.z) : Mathf.RoundToInt(transform.position.y);
             if (hudBackground) hudBackground.gameObject.SetActive(paused);
             if (readout) readout.text = paused
-                ? (mapMode ? locationName : "ADDESTRAMENTO") + "  ·  " + (freeFlight ? "LIBERO" : "TUTA") + "  ·  " + notice
-                : Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h   ·   " + altitude + " m" + TimeTrialRace.Status;
+                ? (mapMode ? locationName : "ADDESTRAMENTO") + "\n" + (freeFlight ? "LIBERO" : "TUTA") + "\n" + notice
+                : "VEL  " + Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h\nALT  " + altitude + " m\nROT  " + HeadingLabel() + TimeTrialRace.Status.Replace("   ·   ", "\n");
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Stick SX: velocità + virata  ·  Grip DX: turbo  ·  Grip SX: freno\nTrigger DX/SX: sali/scendi  ·  X luogo  ·  Y reset  ·  A start  ·  B pausa";
+                if (paused) instructions.text = "Stick SX velocità/virata\nGrip DX turbo\nGrip SX freno\nTrigger quota\nX luogo  Y reset\nA start  B pausa";
             }
+        }
+
+        string HeadingLabel()
+        {
+            float heading = transform.eulerAngles.y;
+            string[] names = { "NORD", "NORD-EST", "EST", "SUD-EST", "SUD", "SUD-OVEST", "OVEST", "NORD-OVEST" };
+            int index = Mathf.RoundToInt(Mathf.Repeat(heading, 360f) / 45f) % names.Length;
+            return Mathf.RoundToInt(heading).ToString("000") + "° " + names[index];
         }
         void OnApplicationPause(bool value) { if (value) paused = true; }
         void OnApplicationFocus(bool value) { if (!value) paused = true; }

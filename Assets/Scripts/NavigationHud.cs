@@ -9,7 +9,7 @@ namespace EarthWings
         const double MinLon = 6.0, MaxLon = 18.8, MinLat = 36.0, MaxLat = 47.8;
         public WingsuitPilot pilot;
         RectTransform marker;
-        Text locationText, compassText;
+        Text locationText;
 
         public static void Add(Transform parent, WingsuitPilot pilot, Camera camera)
         {
@@ -40,14 +40,12 @@ namespace EarthWings
             pinRect.sizeDelta = new Vector2(26, 34);
             pin.GetComponent<MapHeadingTriangle>().color = new Color(1f, .28f, .04f, .95f);
 
-            var location = AddLabel(root.transform, "ITALIA", new Vector2(0, -132), new Vector2(270, 30), 19, TextAnchor.MiddleCenter);
-            var compass = AddLabel(parent, "Compass", new Vector2(0, -360), new Vector2(560, 38), 22, TextAnchor.MiddleCenter);
+            var location = AddLabel(root.transform, "ITALIA", new Vector2(0, -138), new Vector2(280, 48), 17, TextAnchor.MiddleCenter);
 
             var hud = root.GetComponent<NavigationHud>();
             hud.pilot = pilot;
             hud.marker = pinRect;
             hud.locationText = location;
-            hud.compassText = compass;
         }
 
         static Text AddLabel(Transform parent, string text, Vector2 position, Vector2 size, int fontSize, TextAnchor alignment)
@@ -85,19 +83,38 @@ namespace EarthWings
                 marker.localRotation = Quaternion.Euler(0, 0, -pilot.transform.eulerAngles.y);
             }
             if (locationText)
-                locationText.text = pilot.mapMode && pilot.globeAnchor ? RegionFor(pilot.globeAnchor.longitudeLatitudeHeight.x, pilot.globeAnchor.longitudeLatitudeHeight.y) : "AREA DI ADDESTRAMENTO";
-            if (compassText)
-            {
-                float heading = pilot.transform.eulerAngles.y;
-                compassText.text = Mathf.RoundToInt(heading).ToString("000") + "° " + DirectionName(heading);
-            }
+                locationText.text = pilot.mapMode && pilot.globeAnchor ? PlaceLabel(pilot.globeAnchor.longitudeLatitudeHeight.x, pilot.globeAnchor.longitudeLatitudeHeight.y) : "AREA DI ADDESTRAMENTO";
         }
 
-        static string DirectionName(float degrees)
+        static string PlaceLabel(double lon, double lat)
         {
-            string[] names = { "NORD", "NORD-EST", "EST", "SUD-EST", "SUD", "SUD-OVEST", "OVEST", "NORD-OVEST" };
-            int index = Mathf.RoundToInt(Mathf.Repeat(degrees, 360f) / 45f) % names.Length;
-            return names[index];
+            return RegionFor(lon, lat) + "\n" + ComuneFor(lon, lat);
+        }
+
+        static string ComuneFor(double lon, double lat)
+        {
+            (string name, double lon, double lat)[] places =
+            {
+                ("COURMAYEUR", 6.9731, 45.7874), ("PRE-SAINT-DIDIER", 6.9850, 45.7640),
+                ("LA SALLE", 7.0740, 45.7440), ("MORGEX", 7.0390, 45.7560),
+                ("LA THUILE", 6.9500, 45.7160), ("AOSTA", 7.3170, 45.7370),
+                ("ROMA", 12.4964, 41.9028), ("FIUMICINO", 12.2300, 41.7700),
+                ("TIVOLI", 12.7980, 41.9600), ("FRASCATI", 12.6800, 41.8090)
+            };
+            string nearest = "COMUNE";
+            double best = double.MaxValue;
+            foreach (var place in places)
+            {
+                double x = (lon - place.lon) * System.Math.Cos(lat * System.Math.PI / 180.0);
+                double y = lat - place.lat;
+                double distance = x * x + y * y;
+                if (distance < best)
+                {
+                    best = distance;
+                    nearest = place.name;
+                }
+            }
+            return nearest;
         }
 
         static string RegionFor(double lon, double lat)

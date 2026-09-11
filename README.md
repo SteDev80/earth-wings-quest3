@@ -22,7 +22,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 - Y sul controller sinistro: torna al punto di lancio e mette il volo in pausa.
 - B sul controller destro: mette in pausa o riprende il volo.
 - X sul controller sinistro: alterna Courmayeur e Roma; riporta in quota e in pausa.
-- La minimappa in basso a sinistra mostra la sagoma dell'Italia, il mare con linee di fondale e il puntatore di rotta. La scritta sotto la mappa indica la regione corrente.
+- La minimappa in basso a sinistra mostra la sagoma dell'Italia, il mare con linee di fondale e il puntatore di rotta. La scritta sotto la mappa indica regione e comune piu' vicino.
 - L'app parte in volo libero, in pausa. Il clic sullo stick sinistro alterna volo libero e tuta alare. La tuta alare richiede una calibrazione: braccia aperte e entrambi i grilletti premuti per 1,5 secondi.
 - La perdita del tracking del visore o del focus mette in pausa. Nel volo libero la perdita del tracking posizionale delle mani non interrompe il volo.
 
@@ -59,7 +59,7 @@ Le schermate VR vengono acquisite da un Quest collegato con `adb exec-out screen
 
 Obiettivo 72 fps, ancora da misurare sul visore. Rendering MultiPass confermato dall'utente per correggere lo sdoppiamento della mappa. Lo streaming delle tile e' bilanciato per non saturare il Quest: troppi caricamenti simultanei possono peggiorare il dettaglio visibile. Sopra 10000 m la camera allunga la distanza visibile fino a 900 km e riduce la foschia Unity; il culling nebbia interno di Cesium resta disattivato per non tagliare i tile vicino all'orizzonte. Nessun confine radiale nella modalità Google: l'origine geografica segue il pilota ogni 1000 m, preservando la posizione sul globo. L'area sintetica resta limitata a 4,5 km. Copertura e dettaglio dipendono dai dati Google; a velocità elevate il caricamento può restare indietro rispetto al volo. Le collisioni dipendono dalle mesh già caricate: non garantiscono protezione sul terreno ancora in streaming. Non riprendere il volo sulle mappe finché il terreno non è visibile.
 
-Informazioni e comandi sono raccolti in basso, con caratteri più grandi e sfondo scuro; le attribuzioni cartografiche sono subito sotto. Il centro della visuale resta libero. Il messaggio di tracking distingue fra visore e mani e indica quando il segnale ritorna; premere A per riprendere.
+Informazioni e comandi sono raccolti in una colonna a destra, con caratteri più grandi e sfondo scuro. Il centro della visuale resta libero. Il messaggio di tracking distingue fra visore e mani e indica quando il segnale ritorna; premere A per riprendere.
 
 Il comando Build esegue un controllo offline di uno spostamento da 125 km, riposizionamento dell'origine, invariabilità della posa locale degli occhi e ritorno ai punti di partenza. Non misura streaming o prestazioni sul Quest.
 
