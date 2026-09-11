@@ -17,7 +17,7 @@ namespace EarthWings
             root.transform.SetParent(parent, false);
             var rect = root.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(300, 300);
-            rect.anchoredPosition = new Vector2(-720, -345);
+            rect.anchoredPosition = new Vector2(-720, -235);
             var image = root.GetComponent<Image>();
             image.color = new Color(.01f, .035f, .07f, .55f);
 
@@ -305,3 +305,4 @@ namespace EarthWings
         }
     }
 }
+

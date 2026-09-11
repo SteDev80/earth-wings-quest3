@@ -175,12 +175,12 @@ namespace EarthWings
             int altitude = globeAnchor ? Mathf.RoundToInt((float)globeAnchor.longitudeLatitudeHeight.z) : Mathf.RoundToInt(transform.position.y);
             if (hudBackground) hudBackground.gameObject.SetActive(paused);
             if (readout) readout.text = paused
-                ? (mapMode ? locationName : "ADDESTRAMENTO") + "\n" + (freeFlight ? "LIBERO" : "TUTA") + "\n" + notice
-                : "VEL  " + Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h\nALT  " + altitude + " m\nROT  " + HeadingLabel() + TimeTrialRace.Status.Replace("   ·   ", "\n");
+                ? (mapMode ? locationName : "ADDESTRAMENTO") + "  ·  " + (freeFlight ? "LIBERO" : "TUTA") + "  ·  " + notice
+                : "VEL " + Mathf.RoundToInt(localVelocity.magnitude * 3.6f) + " km/h   ·   ALT " + altitude + " m   ·   ROT " + HeadingLabel() + TimeTrialRace.Status;
             if (instructions)
             {
                 instructions.gameObject.SetActive(paused);
-                if (paused) instructions.text = "Stick SX velocità/virata\nGrip DX turbo\nGrip SX freno\nTrigger quota\nX luogo  Y reset\nA start  B pausa";
+                if (paused) instructions.text = "Stick SX velocità/virata  ·  Grip DX turbo  ·  Grip SX freno  ·  Trigger quota  ·  X luogo  ·  Y reset  ·  A start  ·  B pausa";
             }
         }
 
@@ -195,3 +195,5 @@ namespace EarthWings
         void OnApplicationFocus(bool value) { if (!value) paused = true; }
     }
 }
+
+

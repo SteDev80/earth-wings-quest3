@@ -40,16 +40,16 @@ namespace EarthWings
             var canvas = panel.GetComponent<Canvas>(); canvas.renderMode = RenderMode.WorldSpace;
             canvas.worldCamera = cam;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(1800,1100);
-            var backdrop = new GameObject("Right HUD background", typeof(RectTransform), typeof(Image));
+            var backdrop = new GameObject("Lower HUD background", typeof(RectTransform), typeof(Image));
             backdrop.transform.SetParent(panel.transform, false);
-            backdrop.GetComponent<RectTransform>().anchoredPosition = new Vector2(690, -110);
-            backdrop.GetComponent<RectTransform>().sizeDelta = new Vector2(330, 260);
+            backdrop.GetComponent<RectTransform>().anchoredPosition = new Vector2(165, -430);
+            backdrop.GetComponent<RectTransform>().sizeDelta = new Vector2(1220, 105);
             backdrop.GetComponent<Image>().color = new Color(.015f,.035f,.05f,.72f);
             pilot.hudBackground = backdrop.GetComponent<Image>();
-            pilot.readout = HudLabel(panel.transform, "Flight status", new Vector2(690, -70), new Vector2(300, 135), 20);
-            pilot.readout.alignment = TextAnchor.MiddleRight;
-            pilot.instructions = HudLabel(panel.transform, "Controls", new Vector2(690, -180), new Vector2(300, 95), 16);
-            pilot.instructions.alignment = TextAnchor.MiddleRight;
+            pilot.readout = HudLabel(panel.transform, "Flight status", new Vector2(165, -405), new Vector2(1160, 42), 19);
+            pilot.readout.alignment = TextAnchor.MiddleCenter;
+            pilot.instructions = HudLabel(panel.transform, "Controls", new Vector2(165, -455), new Vector2(1160, 38), 17);
+            pilot.instructions.alignment = TextAnchor.MiddleCenter;
             NavigationHud.Add(panel.transform, pilot, cam);
             var sun = new GameObject("Sun", typeof(Light)); sun.transform.rotation = Quaternion.Euler(45,-30,0);
             sun.GetComponent<Light>().type = LightType.Directional;
@@ -152,3 +152,5 @@ namespace EarthWings
         }
     }
 }
+
+

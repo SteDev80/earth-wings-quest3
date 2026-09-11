@@ -59,7 +59,7 @@ Le schermate VR vengono acquisite da un Quest collegato con `adb exec-out screen
 
 Obiettivo 72 fps, ancora da misurare sul visore. Rendering MultiPass confermato dall'utente per correggere lo sdoppiamento della mappa. Lo streaming delle tile e' bilanciato per non saturare il Quest: troppi caricamenti simultanei possono peggiorare il dettaglio visibile. Sopra 10000 m la camera allunga la distanza visibile fino a 900 km e riduce la foschia Unity; il culling nebbia interno di Cesium resta disattivato per non tagliare i tile vicino all'orizzonte. Nessun confine radiale nella modalità Google: l'origine geografica segue il pilota ogni 1000 m, preservando la posizione sul globo. L'area sintetica resta limitata a 4,5 km. Copertura e dettaglio dipendono dai dati Google; a velocità elevate il caricamento può restare indietro rispetto al volo. Le collisioni dipendono dalle mesh già caricate: non garantiscono protezione sul terreno ancora in streaming. Non riprendere il volo sulle mappe finché il terreno non è visibile.
 
-Informazioni e comandi sono raccolti in una colonna a destra, con caratteri più grandi e sfondo scuro. Il centro della visuale resta libero. Il messaggio di tracking distingue fra visore e mani e indica quando il segnale ritorna; premere A per riprendere.
+Informazioni e comandi sono raccolti in basso su due righe orizzontali sopra le attribuzioni, con caratteri grandi e sfondo scuro. Il centro della visuale resta libero. Il messaggio di tracking distingue fra visore e mani e indica quando il segnale ritorna; premere A per riprendere.
 
 Il comando Build esegue un controllo offline di uno spostamento da 125 km, riposizionamento dell'origine, invariabilità della posa locale degli occhi e ritorno ai punti di partenza. Non misura streaming o prestazioni sul Quest.
 
@@ -67,3 +67,4 @@ Il comando Build esegue un controllo offline di uno spostamento da 125 km, ripos
 
 - https://cesium.com/learn/cesium-unity/ref-doc/supported-platforms.html
 - https://developers.meta.com/horizon/documentation/unity/unity-xr-plugin/
+
