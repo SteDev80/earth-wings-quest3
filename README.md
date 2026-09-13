@@ -23,7 +23,7 @@ La scena viene generata dal comando Prepare: non modificarla per salvare persona
 - B sul controller destro: mette in pausa o riprende il volo.
 - X sul controller sinistro: alterna Courmayeur e Roma; riporta in quota e in pausa.
 - La minimappa in basso a sinistra mostra la sagoma dell'Italia, il mare con linee di fondale e il puntatore di rotta. La scritta sotto la mappa indica regione e comune piu' vicino.
-- Musica di sottofondo: aggiungi un file audio autorizzato in `Assets/Resources/BackgroundMusic.mp3`, `.ogg`, `.wav` o `.m4a`; Unity lo importera' come `BackgroundMusic` e l'app lo riprodurra' in loop a volume basso.
+- Musica di sottofondo: usa il file audio autorizzato `Assets/Resources/BackgroundMusic.mp3`; Unity lo importera' come `BackgroundMusic` e l'app lo riprodurra' in loop a volume basso.
 - L'app parte in volo libero, in pausa. Il clic sullo stick sinistro alterna volo libero e tuta alare. La tuta alare richiede una calibrazione: braccia aperte e entrambi i grilletti premuti per 1,5 secondi.
 - La perdita del tracking del visore o del focus mette in pausa. Nel volo libero la perdita del tracking posizionale delle mani non interrompe il volo.
 
@@ -68,6 +68,7 @@ Il comando Build esegue un controllo offline di uno spostamento da 125 km, ripos
 
 - https://cesium.com/learn/cesium-unity/ref-doc/supported-platforms.html
 - https://developers.meta.com/horizon/documentation/unity/unity-xr-plugin/
+
 
 
 
