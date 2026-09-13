@@ -12,6 +12,7 @@ namespace EarthWings
         {
             Application.targetFrameRate = 72;
             var rig = new GameObject("Wingsuit Rig");
+            rig.AddComponent<BackgroundMusic>();
             var pilot = rig.AddComponent<WingsuitPilot>();
             pilot.head = new GameObject("Head", typeof(Camera), typeof(AudioListener)).transform;
             pilot.head.SetParent(rig.transform, false);
@@ -152,5 +153,6 @@ namespace EarthWings
         }
     }
 }
+
 
 
