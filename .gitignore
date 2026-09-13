@@ -11,3 +11,4 @@ build/
 *.log
 Packages/*.tgz
 Assets/Resources/MapCredentials.json*
+Assets/Resources/BackgroundMusic.*
